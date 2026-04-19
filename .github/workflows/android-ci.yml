@@ -34,8 +34,8 @@ jobs:
           files: "**/test-results/**/*.xml"
 
       # Hiển thị Coverage Summary dưới dạng Comment trong PR
-      - name: Add Coverage PR Comment
-        uses: Madrazo/jacoco-report@v1.1
+      - name: Jacoco Report to PR
+        uses: irongrp/jacoco-report-action@v1.1.1
         with:
           paths: ${{ github.workspace }}/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
