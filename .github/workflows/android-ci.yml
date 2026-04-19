@@ -19,33 +19,15 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Grant execute permission for gradlew
+      - name: Grant execute permission
         run: chmod +x gradlew
 
-      # Chạy Unit Test và tạo report Jacoco (sử dụng task bạn đã viết ở bước trước)
-      - name: Run Unit Tests
+      - name: Run Tests & Coverage
         run: ./gradlew testDebugUnitTest jacocoTestReport
 
-      # Đẩy kết quả Test lên giao diện GitHub
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
+      # CÁCH CHÍNH CHỦ: Đẩy báo cáo lên tab Summary của GitHub
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
         with:
-          files: "**/test-results/**/*.xml"
-
-      - name: Jacoco Report
-        uses: madrazo/jacoco-report@v1.3 # Thử bản cập nhật mới nhất (v1.3)
-        if: always()
-        with:
-          paths: ${{ github.workspace }}/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 80
-          min-coverage-changed-files: 80
-
-      # NẾU CÁCH TRÊN VẪN LỖI, HÃY DÙNG CÁCH DƯỚI ĐÂY (PHỔ BIẾN NHẤT)
-      - name: Add Coverage Comment
-        uses: pyrcz/jacoco-report@v0.5.0
-        with:
-          path: ${{ github.workspace }}/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Báo cáo độ bao phủ Code (Coverage)"
+          name: coverage-report
+          path: app/build/reports/jacoco/jacocoTestReport/html/ # Đường dẫn đến bản HTML để bạn xem trực tiếp
