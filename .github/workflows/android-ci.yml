@@ -19,25 +19,15 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Grant execute permission for gradlew
+      - name: Grant execute permission
         run: chmod +x gradlew
 
-      # Chạy Unit Test và tạo report Jacoco (sử dụng task bạn đã viết ở bước trước)
-      - name: Run Unit Tests
+      - name: Run Tests & Coverage
         run: ./gradlew testDebugUnitTest jacocoTestReport
 
-      # Đẩy kết quả Test lên giao diện GitHub
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
+      # CÁCH CHÍNH CHỦ: Đẩy báo cáo lên tab Summary của GitHub
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
         with:
-          files: "**/test-results/**/*.xml"
-
-      # Hiển thị Coverage Summary dưới dạng Comment trong PR
-      - name: Jacoco Report to PR
-        uses: irongrp/jacoco-report-action@v1.1.1
-        with:
-          paths: ${{ github.workspace }}/app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 80 # Tùy chỉnh mức tối thiểu (Pipeline sẽ fail nếu thấp hơn)
-          min-coverage-changed-files: 80
+          name: coverage-report
+          path: app/build/reports/jacoco/jacocoTestReport/html/ # Đường dẫn đến bản HTML để bạn xem trực tiếp
