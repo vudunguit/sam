@@ -9,6 +9,9 @@ import com.sam.databinding.FragmentSecondBinding
 import org.koin.android.ext.android.inject
 import com.sam.core.navigation.Navigator
 import com.sam.core.navigation.observeNavigation
+import coil.load
+import android.net.Uri
+import androidx.core.net.toUri
 
 class SecondFragment : Fragment() {
     private var binding: FragmentSecondBinding? = null
@@ -30,6 +33,12 @@ class SecondFragment : Fragment() {
         
         binding?.toolbar?.setNavigationOnClickListener {
             navigator.navigateUp()
+        }
+
+        arguments?.getString("media_uri")?.let { uriString ->
+            binding?.ivDetail?.load(uriString.toUri()) {
+                crossfade(true)
+            }
         }
     }
 

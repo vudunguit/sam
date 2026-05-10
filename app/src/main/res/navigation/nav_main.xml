@@ -16,7 +16,11 @@
 
     <fragment
         android:id="@+id/fragmentSecond"
-        android:name="com.sam.ui.main.SecondFragment"/>
+        android:name="com.sam.ui.main.SecondFragment">
+        <argument
+            android:name="media_uri"
+            app:argType="string" />
+    </fragment>
 
     <activity
         android:id="@+id/activitySecond"

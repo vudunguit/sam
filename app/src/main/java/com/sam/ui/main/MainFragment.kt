@@ -12,10 +12,28 @@ import org.koin.android.ext.android.inject
 import com.sam.core.navigation.Navigator
 import com.sam.core.navigation.observeNavigation
 
+import androidx.activity.result.contract.ActivityResultContracts
+import android.Manifest
+import android.os.Build
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.launch
+
 class MainFragment: Fragment() {
     private var binding: FragmentMainBinding? = null
     private val viewModel: MainViewModel by viewModel()
     private val navigator: Navigator by inject()
+    private lateinit var adapter: MediaAdapter
+
+    private val permissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions.entries.all { it.value }
+        if (granted) {
+            viewModel.loadMedia()
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,12 +48,28 @@ class MainFragment: Fragment() {
         
         observeNavigation(navigator)
         
-        binding?.btnMove?.setOnClickListener {
-            viewModel.navigateToSecondFragment()
+        adapter = MediaAdapter { mediaItem ->
+            viewModel.navigateToSecondFragment(mediaItem.uri.toString())
         }
-        
-        binding?.btnMoveActivity?.setOnClickListener {
-            viewModel.navigateToSecondActivity()
+        binding?.rvMedia?.adapter = adapter
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.mediaList.collect { list ->
+                    adapter.submitList(list)
+                }
+            }
         }
+
+        requestMediaPermissions()
+    }
+
+    private fun requestMediaPermissions() {
+        val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO)
+        } else {
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+        permissionLauncher.launch(permissions)
     }
 }

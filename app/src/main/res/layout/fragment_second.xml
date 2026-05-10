@@ -14,16 +14,15 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="Second Fragment"
+            app:title=""
             app:navigationIcon="?attr/homeAsUpIndicator" />
     </com.google.android.material.appbar.AppBarLayout>
     
-    <TextView
-        android:id="@+id/tvSecond"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="This is the Second Fragment"
-        android:textSize="24sp"
+    <ImageView
+        android:id="@+id/ivDetail"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

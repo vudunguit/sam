@@ -3,24 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.Button"
-        android:text="Move to second fragment"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/btnMove"/>
-        
-    <Button
-        android:id="@+id/btnMoveActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.Button"
-        android:text="Move to second activity"
-        app:layout_constraintTop_toBottomOf="@id/btnMove"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMedia"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="3" />
 </androidx.constraintlayout.widget.ConstraintLayout>
