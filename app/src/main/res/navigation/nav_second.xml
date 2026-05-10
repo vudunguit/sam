@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_second"
+    app:startDestination="@id/fragmentSecondMain">
+
+    <fragment
+        android:id="@+id/fragmentSecondMain"
+        android:name="com.sam.ui.second.SecondMainFragment"/>
+
+</navigation>

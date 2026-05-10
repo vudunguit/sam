@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/fragmentMain">
+    <fragment
+        android:id="@+id/fragmentMain"
+        android:name="com.sam.ui.main.MainFragment">
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentSecond"
+            app:destination="@id/fragmentSecond" />
+        <action
+            android:id="@+id/action_fragmentMain_to_activitySecond"
+            app:destination="@id/activitySecond" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentSecond"
+        android:name="com.sam.ui.main.SecondFragment"/>
+
+    <activity
+        android:id="@+id/activitySecond"
+        android:name="com.sam.ui.second.SecondActivity"
+        android:label="SecondActivity" />
+</navigation>

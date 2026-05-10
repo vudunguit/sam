@@ -55,6 +55,9 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     
+    // Core Module
+    implementation(project(":core"))
+    
     // Koin
     implementation(libs.koin.android)
     
@@ -62,6 +65,9 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
+
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     
     // Retrofit
     implementation(libs.retrofit)
