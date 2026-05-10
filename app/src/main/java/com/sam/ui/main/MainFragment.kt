@@ -33,5 +33,9 @@ class MainFragment: Fragment() {
         binding?.btnMove?.setOnClickListener {
             viewModel.navigateToSecondFragment()
         }
+        
+        binding?.btnMoveActivity?.setOnClickListener {
+            viewModel.navigateToSecondActivity()
+        }
     }
 }

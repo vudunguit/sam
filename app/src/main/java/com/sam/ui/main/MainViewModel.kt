@@ -11,4 +11,8 @@ class MainViewModel(
     fun navigateToSecondFragment() {
         navigator.navigate(R.id.action_fragmentMain_to_fragmentSecond)
     }
+
+    fun navigateToSecondActivity() {
+        navigator.navigate(R.id.action_fragmentMain_to_activitySecond)
+    }
 }
