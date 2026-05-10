@@ -55,6 +55,9 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     
+    // Core Module
+    implementation(project(":core"))
+    
     // Koin
     implementation(libs.koin.android)
     

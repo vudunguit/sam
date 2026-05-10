@@ -5,5 +5,13 @@
     app:startDestination="@id/fragmentMain">
     <fragment
         android:id="@+id/fragmentMain"
-        android:name="com.sam.ui.main.MainFragment"/>
+        android:name="com.sam.ui.main.MainFragment">
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentSecond"
+            app:destination="@id/fragmentSecond" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentSecond"
+        android:name="com.sam.ui.main.SecondFragment"/>
 </navigation>

@@ -6,6 +6,7 @@ import org.koin.core.context.startKoin
 import com.sam.di.appModule
 import com.sam.di.networkModule
 import com.sam.di.databaseModule
+import com.sam.core.di.coreModule
 
 class MainApplication : Application() {
     override fun onCreate() {
@@ -13,7 +14,7 @@ class MainApplication : Application() {
         
         startKoin {
             androidContext(this@MainApplication)
-            modules(appModule, networkModule, databaseModule)
+            modules(coreModule, appModule, networkModule, databaseModule)
         }
     }
 }
