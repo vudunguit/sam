@@ -19,8 +19,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pytest pytest-cov
-          pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          # Liệt kê các thư viện bạn cần ở đây
+          pip install pytest pytest-cov requests flask
 
       - name: Run tests with coverage
         # --cov-fail-under=85 is the magic flag that fails the build if coverage is < 85%
