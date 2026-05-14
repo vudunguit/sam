@@ -1,33 +1,28 @@
-name: Android CI Test & Coverage
+name: CI Pipeline
 
 on:
   pull_request:
-    branches: [ main, master ] # Chạy khi có PR vào nhánh chính
+    branches: [ main, master ]
 
 jobs:
-  test:
+  test-and-coverage:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: 'gradle'
+          python-version: '3.10'
 
-      - name: Grant execute permission
-        run: chmod +x gradlew
+      - name: Install dependencies
+        run: |
+          pip install pytest pytest-cov
+          pip install -r requirements.txt
 
-      - name: Run Tests & Coverage
-        run: ./gradlew testDebugUnitTest jacocoTestReport
-
-      # CÁCH CHÍNH CHỦ: Đẩy báo cáo lên tab Summary của GitHub
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: app/build/reports/jacoco/jacocoTestReport/html/ # Đường dẫn đến bản HTML để bạn xem trực tiếp
+      - name: Run tests with coverage
+        # --cov-fail-under=85 is the magic flag that fails the build if coverage is < 85%
+        run: |
+          pytest --cov=./ --cov-report=term-missing --cov-fail-under=85
