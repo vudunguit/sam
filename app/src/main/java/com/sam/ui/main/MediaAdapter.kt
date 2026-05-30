@@ -10,7 +10,7 @@ import coil.load
 import com.sam.data.MediaItem
 import com.sam.databinding.ItemMediaBinding
 
-class MediaAdapter(private val onClick: (MediaItem) -> Unit) :
+class MediaAdapter(private val onClick: (MediaItem, View) -> Unit) :
     ListAdapter<MediaItem, MediaAdapter.MediaViewHolder>(MediaDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
@@ -25,12 +25,13 @@ class MediaAdapter(private val onClick: (MediaItem) -> Unit) :
     inner class MediaViewHolder(private val binding: ItemMediaBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(media: MediaItem) {
+            binding.ivMedia.transitionName = media.uri.toString()
             binding.ivMedia.load(media.uri) {
                 crossfade(true)
             }
             binding.ivVideoIcon.visibility = if (media.isVideo) View.VISIBLE else View.GONE
             binding.root.setOnClickListener {
-                onClick(media)
+                onClick(media, binding.ivMedia)
             }
         }
     }

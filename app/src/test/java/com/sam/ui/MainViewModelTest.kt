@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.sam.R
 import com.sam.core.navigation.Navigator
 import com.sam.data.MediaItem
+import com.sam.core.navigation.NavArgs
 import com.sam.data.MediaRepository
 import com.sam.ui.main.MainViewModel
 import io.mockk.coEvery
@@ -63,19 +64,6 @@ class MainViewModelTest {
         assertEquals(mediaItems, viewModel.mediaList.value)
     }
 
-    @Test
-    fun navigateToSecondFragment_callsNavigatorWithArgs() {
-        val uri = "content://media/1"
-        
-        viewModel.navigateToSecondFragment(uri)
-
-        verify { 
-            navigator.navigate(
-                actionId = R.id.action_fragmentMain_to_fragmentSecond, 
-                args = match { it?.getString("media_uri") == uri }
-            ) 
-        }
-    }
 
     @Test
     fun navigateToSecondActivity_callsNavigator() {
@@ -83,4 +71,6 @@ class MainViewModelTest {
 
         verify { navigator.navigate(R.id.action_fragmentMain_to_activitySecond) }
     }
+
+
 }

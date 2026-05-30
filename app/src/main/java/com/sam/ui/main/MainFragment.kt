@@ -19,6 +19,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
+import androidx.core.view.doOnPreDraw
+import com.sam.R
+import com.sam.core.navigation.NavArgs
 
 class MainFragment: Fragment() {
     private var binding: FragmentMainBinding? = null
@@ -34,6 +39,11 @@ class MainFragment: Fragment() {
             viewModel.loadMedia()
         }
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,10 +56,19 @@ class MainFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+        
         observeNavigation(navigator)
         
-        adapter = MediaAdapter { mediaItem ->
-            viewModel.navigateToSecondFragment(mediaItem.uri.toString())
+        adapter = MediaAdapter { mediaItem, sharedView ->
+            val extras = FragmentNavigatorExtras(sharedView to mediaItem.uri.toString())
+            val bundle = Bundle().apply { putString(NavArgs.MEDIA_URI, mediaItem.uri.toString()) }
+            if (mediaItem.isVideo) {
+                findNavController().navigate(R.id.action_fragmentMain_to_fragmentVideoDetail, bundle, null, extras)
+            } else {
+                findNavController().navigate(R.id.action_fragmentMain_to_fragmentSecond, bundle, null, extras)
+            }
         }
         binding?.rvMedia?.adapter = adapter
 

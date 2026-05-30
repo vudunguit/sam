@@ -9,13 +9,28 @@ import com.sam.databinding.FragmentSecondBinding
 import org.koin.android.ext.android.inject
 import com.sam.core.navigation.Navigator
 import com.sam.core.navigation.observeNavigation
+import com.sam.core.navigation.NavArgs
 import coil.load
 import android.net.Uri
 import androidx.core.net.toUri
+import android.graphics.Color
+import com.google.android.material.transition.MaterialContainerTransform
 
-class SecondFragment : Fragment() {
+class ImageDetailFragment : Fragment() {
     private var binding: FragmentSecondBinding? = null
     private val navigator: Navigator by inject()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            duration = 300
+            scrimColor = Color.TRANSPARENT
+        }
+        sharedElementReturnTransition = MaterialContainerTransform().apply {
+            duration = 300
+            scrimColor = Color.TRANSPARENT
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,13 +44,15 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        binding?.ivDetail?.transitionName = arguments?.getString(NavArgs.MEDIA_URI)
+        
         observeNavigation(navigator)
         
         binding?.toolbar?.setNavigationOnClickListener {
             navigator.navigateUp()
         }
 
-        arguments?.getString("media_uri")?.let { uriString ->
+        arguments?.getString(NavArgs.MEDIA_URI)?.let { uriString ->
             binding?.ivDetail?.load(uriString.toUri()) {
                 crossfade(true)
             }

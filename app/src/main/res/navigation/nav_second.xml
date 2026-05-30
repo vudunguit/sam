@@ -6,6 +6,6 @@
 
     <fragment
         android:id="@+id/fragmentSecondMain"
-        android:name="com.sam.ui.second.SecondMainFragment"/>
+        android:name="com.sam.ui.detail.SecondMainFragment"/>
 
 </navigation>

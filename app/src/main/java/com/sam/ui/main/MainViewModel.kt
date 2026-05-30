@@ -5,6 +5,7 @@ import com.sam.ui.base.BaseViewModel
 import com.sam.core.navigation.Navigator
 import com.sam.data.MediaRepository
 import com.sam.data.MediaItem
+import com.sam.core.navigation.NavArgs
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,12 +25,6 @@ class MainViewModel(
         viewModelScope.launch {
             _mediaList.value = mediaRepository.getMediaItems()
         }
-    }
-    fun navigateToSecondFragment(mediaUri: String) {
-        val bundle = android.os.Bundle().apply {
-            putString("media_uri", mediaUri)
-        }
-        navigator.navigate(R.id.action_fragmentMain_to_fragmentSecond, bundle)
     }
 
     fun navigateToSecondActivity() {
