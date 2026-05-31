@@ -1,4 +1,4 @@
-package com.sam.ui.detail
+package com.sam.ui.second
 
 import android.os.Bundle
 import android.view.LayoutInflater

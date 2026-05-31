@@ -1,6 +1,7 @@
 package com.sam.core.navigation
 
 import android.os.Bundle
+import androidx.navigation.Navigator as NavNavigator
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -10,7 +11,11 @@ class NavigatorImpl : Navigator {
     override val navigationCommands: SharedFlow<NavigationCommand> = _navigationCommands.asSharedFlow()
 
     override fun navigate(actionId: Int, args: Bundle?) {
-        _navigationCommands.tryEmit(NavigationCommand.ToAction(actionId, args))
+        navigate(actionId, args, null)
+    }
+
+    override fun navigate(actionId: Int, args: Bundle?, extras: NavNavigator.Extras?) {
+        _navigationCommands.tryEmit(NavigationCommand.ToAction(actionId, args, extras))
     }
 
     override fun navigateUp() {

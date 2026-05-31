@@ -1,4 +1,4 @@
-package com.sam.ui.main
+package com.sam.ui.gallery
 
 import android.view.LayoutInflater
 import android.view.View
