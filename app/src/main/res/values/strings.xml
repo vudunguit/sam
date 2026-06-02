@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Sam</string>
+    <string name="tab_gallery">Gallery</string>
+    <string name="tab_duplicates">Duplicates</string>
+    <string name="duplicate_photos_idle">Ready to scan for similar photos.</string>
+    <string name="duplicate_photos_loading">Loading photos from device…</string>
+    <string name="duplicate_photos_analyzing">Analyzing %1$d of %2$d photos…</string>
+    <string name="duplicate_photos_found">Found %1$d similar photo groups</string>
+    <string name="duplicate_photos_none_found">No similar photos found (80%%+ match).</string>
+    <string name="duplicate_photos_no_images">No photos found on this device.</string>
+    <string name="duplicate_photos_unreadable">Only %1$d of %2$d photos could be read. Check photo permissions and supported formats.</string>
+    <string name="duplicate_photos_scan_summary_none">Scanned %1$d photos (%2$d readable). No groups at 80%%+ similarity.</string>
+    <string name="duplicate_photos_scan_summary">Scanned %1$d photos (%2$d readable). Found %3$d similar groups.</string>
+    <string name="duplicate_photos_rescan">Scan again</string>
+    <string name="duplicate_photos_permission_denied">Photo permission is required to find duplicates.</string>
+    <string name="duplicate_photos_group_title">%1$d photos · %2$d%% similar</string>
+    <string name="media_detail_position">%1$d / %2$d</string>
 </resources>

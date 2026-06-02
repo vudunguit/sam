@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fragmentGallery"
+        android:icon="@drawable/baseline_perm_media_24"
+        android:title="@string/tab_gallery" />
+    <item
+        android:id="@+id/fragmentDuplicatePhotos"
+        android:icon="@drawable/baseline_copy_all_24"
+        android:title="@string/tab_duplicates" />
+    <item
+        android:id="@+id/fragmentSettings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="Settings" />
+</menu>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_bottom"
+    app:startDestination="@id/fragmentGallery">
+
+    <fragment
+        android:id="@+id/fragmentGallery"
+        android:name="com.sam.ui.gallery.GalleryFragment">
+        <action
+            android:id="@+id/action_fragmentGallery_to_fragmentMediaDetail"
+            app:destination="@id/fragmentMediaDetail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentDuplicatePhotos"
+        android:name="com.sam.ui.duplicate.DuplicatePhotoFragment">
+        <action
+            android:id="@+id/action_fragmentDuplicatePhotos_to_fragmentMediaDetail"
+            app:destination="@id/fragmentMediaDetail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentSettings"
+        android:name="com.sam.ui.settings.SettingsFragment" />
+
+    <fragment
+        android:id="@+id/fragmentMediaDetail"
+        android:name="com.sam.ui.detail.MediaDetailFragment">
+        <argument
+            android:name="media_uri"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="media_uris"
+            app:argType="string[]"
+            app:nullable="true" />
+        <argument
+            android:name="media_is_video"
+            app:argType="boolean[]"
+            app:nullable="true" />
+        <argument
+            android:name="media_index"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
+
+</navigation>

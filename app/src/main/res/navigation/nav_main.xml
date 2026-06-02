@@ -7,16 +7,9 @@
         android:id="@+id/fragmentMain"
         android:name="com.sam.ui.main.MainFragment">
         <action
-            android:id="@+id/action_fragmentMain_to_fragmentSecond"
-            app:destination="@id/fragmentSecond" />
-        <action
             android:id="@+id/action_fragmentMain_to_activitySecond"
             app:destination="@id/activitySecond" />
     </fragment>
-
-    <fragment
-        android:id="@+id/fragmentSecond"
-        android:name="com.sam.ui.main.SecondFragment"/>
 
     <activity
         android:id="@+id/activitySecond"

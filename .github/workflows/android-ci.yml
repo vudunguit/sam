@@ -5,12 +5,32 @@ on:
     branches: [ main, master ]
 
 jobs:
-  test-and-coverage:
+  TestCoverage:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant execute permission
+        run: chmod +x gradlew
+
+      - name: Run Tests & Coverage
+        run: ./gradlew testDebugUnitTest jacocoTestReport
+
+      # CÁCH CHÍNH CHỦ: Đẩy báo cáo lên tab Summary của GitHub
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: app/build/reports/jacoco/jacocoTestReport/html/ #
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -19,8 +39,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pytest pytest-cov
-          pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          # Liệt kê các thư viện bạn cần ở đây
+          pip install pytest pytest-cov requests flask
 
       - name: Run tests with coverage
         # --cov-fail-under=85 is the magic flag that fails the build if coverage is < 85%

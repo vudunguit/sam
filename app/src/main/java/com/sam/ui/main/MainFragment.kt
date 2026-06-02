@@ -4,38 +4,40 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.sam.R
 import com.sam.databinding.FragmentMainBinding
 
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.android.ext.android.inject
-import com.sam.core.navigation.Navigator
-import com.sam.core.navigation.observeNavigation
+class MainFragment : Fragment() {
 
-class MainFragment: Fragment() {
-    private var binding: FragmentMainBinding? = null
-    private val viewModel: MainViewModel by viewModel()
-    private val navigator: Navigator by inject()
+    private var _binding: FragmentMainBinding? = null
+    private val binding get() = _binding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMainBinding.inflate(inflater, container, false)
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
-        observeNavigation(navigator)
-        
-        binding?.btnMove?.setOnClickListener {
-            viewModel.navigateToSecondFragment()
+
+        val navHostFragment = childFragmentManager.findFragmentById(R.id.innerNavHost) as NavHostFragment
+        val navController = navHostFragment.navController
+        binding?.bottomNavigation?.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding?.bottomNavigation?.isVisible = destination.id != R.id.fragmentMediaDetail
         }
-        
-        binding?.btnMoveActivity?.setOnClickListener {
-            viewModel.navigateToSecondActivity()
-        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
