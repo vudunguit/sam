@@ -10,8 +10,15 @@ import com.sam.data.MediaItem
 import com.sam.databinding.ItemDuplicateThumbBinding
 
 class DuplicatePhotoThumbAdapter(
-    private val onClick: (MediaItem, android.view.View) -> Unit
+    private val onClick: (List<MediaItem>, Int, android.view.View) -> Unit
 ) : ListAdapter<MediaItem, DuplicatePhotoThumbAdapter.ThumbViewHolder>(ThumbDiffCallback()) {
+
+    private var groupItems: List<MediaItem> = emptyList()
+
+    fun submitGroup(items: List<MediaItem>) {
+        groupItems = items
+        submitList(items)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbViewHolder {
         val binding = ItemDuplicateThumbBinding.inflate(
@@ -23,20 +30,21 @@ class DuplicatePhotoThumbAdapter(
     }
 
     override fun onBindViewHolder(holder: ThumbViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), groupItems)
     }
 
     inner class ThumbViewHolder(
         private val binding: ItemDuplicateThumbBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(mediaItem: MediaItem) {
+        fun bind(mediaItem: MediaItem, items: List<MediaItem>) {
             binding.ivThumb.transitionName = mediaItem.uri.toString()
             binding.ivThumb.load(mediaItem.uri) {
-                crossfade(true)
+                crossfade(false)
             }
             binding.root.setOnClickListener {
-                onClick(mediaItem, binding.ivThumb)
+                val index = items.indexOfFirst { it.id == mediaItem.id }.coerceAtLeast(0)
+                onClick(items, index, binding.ivThumb)
             }
         }
     }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -30,6 +31,9 @@ class MainFragment : Fragment() {
         val navHostFragment = childFragmentManager.findFragmentById(R.id.innerNavHost) as NavHostFragment
         val navController = navHostFragment.navController
         binding?.bottomNavigation?.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding?.bottomNavigation?.isVisible = destination.id != R.id.fragmentMediaDetail
+        }
     }
 
     override fun onDestroyView() {

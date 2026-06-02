@@ -82,6 +82,8 @@ dependencies {
 
     // Coil
     implementation(libs.coil)
+    implementation(libs.coil.video)
+    implementation(libs.androidx.viewpager2)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

@@ -11,7 +11,7 @@ import com.sam.data.MediaItem
 import com.sam.databinding.ItemDuplicateGroupBinding
 
 class DuplicateGroupAdapter(
-    private val onPhotoClick: (MediaItem, android.view.View) -> Unit
+    private val onPhotoClick: (List<MediaItem>, Int, android.view.View) -> Unit
 ) : ListAdapter<DuplicateGroup, DuplicateGroupAdapter.GroupViewHolder>(GroupDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
@@ -31,7 +31,9 @@ class DuplicateGroupAdapter(
         private val binding: ItemDuplicateGroupBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        private val photoAdapter = DuplicatePhotoThumbAdapter(onPhotoClick)
+        private val photoAdapter = DuplicatePhotoThumbAdapter { items, index, sharedView ->
+            onPhotoClick(items, index, sharedView)
+        }
 
         init {
             binding.rvGroupPhotos.apply {
@@ -46,7 +48,7 @@ class DuplicateGroupAdapter(
                 group.items.size,
                 group.similarityPercent
             )
-            photoAdapter.submitList(group.items)
+            photoAdapter.submitGroup(group.items)
         }
     }
 }

@@ -24,14 +24,31 @@ class MediaAdapter(private val onClick: (MediaItem, View) -> Unit) :
 
     inner class MediaViewHolder(private val binding: ItemMediaBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        val sharedView: View get() = binding.ivMedia
+
         fun bind(media: MediaItem) {
             binding.ivMedia.transitionName = media.uri.toString()
             binding.ivMedia.load(media.uri) {
-                crossfade(true)
+                crossfade(false)
             }
             binding.ivVideoIcon.visibility = if (media.isVideo) View.VISIBLE else View.GONE
+            binding.tvDuration.visibility = if (media.isVideo) View.VISIBLE else View.GONE
+            binding.tvDuration.text = formatDuration(media.durationMillis)
             binding.root.setOnClickListener {
                 onClick(media, binding.ivMedia)
+            }
+        }
+
+        private fun formatDuration(durationMillis: Long): String {
+            val totalSeconds = (durationMillis / 1000).coerceAtLeast(0L)
+            val seconds = totalSeconds % 60
+            val minutes = (totalSeconds / 60) % 60
+            val hours = totalSeconds / 3600
+
+            return if (hours > 0) {
+                "%d:%02d:%02d".format(hours, minutes, seconds)
+            } else {
+                "%d:%02d".format(minutes, seconds)
             }
         }
     }

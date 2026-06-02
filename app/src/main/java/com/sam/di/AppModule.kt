@@ -12,5 +12,5 @@ val appModule = module {
     single { MediaRepository(get()) }
     single { ImageSimilarityAnalyzer() }
     viewModel { MainViewModel(get(), get()) }
-    viewModel { DuplicatePhotoViewModel(get(), get(), get()) }
+    viewModel { DuplicatePhotoViewModel(get(), get()) }
 }

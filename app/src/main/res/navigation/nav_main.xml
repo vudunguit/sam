@@ -7,31 +7,8 @@
         android:id="@+id/fragmentMain"
         android:name="com.sam.ui.main.MainFragment">
         <action
-            android:id="@+id/action_fragmentMain_to_fragmentImageDetail"
-            app:destination="@id/fragmentImageDetail" />
-        <action
             android:id="@+id/action_fragmentMain_to_activitySecond"
             app:destination="@id/activitySecond" />
-        <action
-            android:id="@+id/action_fragmentMain_to_fragmentVideoDetail"
-            app:destination="@id/fragmentVideoDetail" />
-    </fragment>
-
-
-    <fragment
-        android:id="@+id/fragmentImageDetail"
-        android:name="com.sam.ui.detail.ImageDetailFragment">
-        <argument
-            android:name="media_uri"
-            app:argType="string" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/fragmentVideoDetail"
-        android:name="com.sam.ui.detail.VideoDetailFragment">
-        <argument
-            android:name="media_uri"
-            app:argType="string" />
     </fragment>
 
     <activity

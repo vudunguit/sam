@@ -7,19 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.SharedElementCallback
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.findNavController
 import com.sam.R
-import com.sam.core.navigation.Navigator
-import com.sam.core.navigation.observeNavigation
+import com.sam.data.DuplicateGroup
 import com.sam.databinding.FragmentDuplicatePhotoBinding
+import com.sam.ui.detail.MediaDetailNav
+import com.sam.ui.detail.SharedElementHelper
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DuplicatePhotoFragment : Fragment() {
@@ -28,8 +28,40 @@ class DuplicatePhotoFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: DuplicatePhotoViewModel by viewModel()
-    private val navigator: Navigator by inject()
     private lateinit var groupAdapter: DuplicateGroupAdapter
+    private var currentGroups: List<DuplicateGroup> = emptyList()
+
+    private val sharedElementCallback = object : SharedElementCallback() {
+        override fun onMapSharedElements(
+            names: MutableList<String>,
+            sharedElements: MutableMap<String, View>
+        ) {
+            var mappedAll = true
+            names.forEach { uri ->
+                val mapped = SharedElementHelper.mapDuplicateSharedElement(
+                    recyclerView = binding.rvDuplicateGroups,
+                    groups = currentGroups,
+                    uri = uri,
+                    sharedElements = sharedElements
+                )
+                if (!mapped) mappedAll = false
+            }
+            if (!mappedAll && names.isNotEmpty()) {
+                postponeEnterTransition()
+                binding.rvDuplicateGroups.doOnPreDraw {
+                    names.forEach { uri ->
+                        SharedElementHelper.mapDuplicateSharedElement(
+                            recyclerView = binding.rvDuplicateGroups,
+                            groups = currentGroups,
+                            uri = uri,
+                            sharedElements = sharedElements
+                        )
+                    }
+                    startPostponedEnterTransition()
+                }
+            }
+        }
+    }
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -39,6 +71,12 @@ class DuplicatePhotoFragment : Fragment() {
         } else {
             binding.tvStatus.text = getString(R.string.duplicate_photos_permission_denied)
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        SharedElementHelper.applyListFragmentTransitions(this)
+        requestMediaPermissions()
     }
 
     override fun onCreateView(
@@ -53,15 +91,22 @@ class DuplicatePhotoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observeNavigation(navigator) {
-            parentFragment?.parentFragment?.findNavController() ?: findNavController()
-        }
+        setEnterSharedElementCallback(sharedElementCallback)
+        setExitSharedElementCallback(sharedElementCallback)
 
-        groupAdapter = DuplicateGroupAdapter { mediaItem, sharedView ->
-            val extras = FragmentNavigatorExtras(sharedView to mediaItem.uri.toString())
-            viewModel.navigateToMediaDetail(mediaItem, extras)
+        groupAdapter = DuplicateGroupAdapter { items, index, sharedView ->
+            MediaDetailNav.open(
+                fragment = this,
+                actionId = R.id.action_fragmentDuplicatePhotos_to_fragmentMediaDetail,
+                items = items,
+                index = index,
+                sharedView = sharedView
+            )
         }
         binding.rvDuplicateGroups.adapter = groupAdapter
+        binding.btnRescan.setOnClickListener {
+            viewModel.startScan(requireContext())
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -70,8 +115,6 @@ class DuplicatePhotoFragment : Fragment() {
                 }
             }
         }
-
-        requestMediaPermissions()
     }
 
     private fun renderState(state: DuplicatePhotoUiState) {
@@ -82,12 +125,14 @@ class DuplicatePhotoFragment : Fragment() {
                 binding.tvStatus.text = getString(R.string.duplicate_photos_idle)
                 binding.rvDuplicateGroups.isVisible = false
                 binding.tvEmpty.isVisible = false
+                binding.btnRescan.isVisible = false
             }
             is DuplicatePhotoUiState.Scanning -> {
                 binding.progressBar.isVisible = true
                 binding.tvStatus.isVisible = true
                 binding.rvDuplicateGroups.isVisible = false
                 binding.tvEmpty.isVisible = false
+                binding.btnRescan.isVisible = false
                 if (state.total == 0) {
                     binding.progressBar.isIndeterminate = true
                     binding.tvStatus.text = getString(R.string.duplicate_photos_loading)
@@ -103,22 +148,39 @@ class DuplicatePhotoFragment : Fragment() {
                 }
             }
             is DuplicatePhotoUiState.Complete -> {
+                currentGroups = state.groups
                 binding.progressBar.isVisible = false
                 binding.tvStatus.isVisible = true
                 groupAdapter.submitList(state.groups)
                 binding.rvDuplicateGroups.isVisible = state.groups.isNotEmpty()
                 binding.tvEmpty.isVisible = state.groups.isEmpty()
-                binding.tvStatus.text = if (state.groups.isEmpty()) {
-                    getString(R.string.duplicate_photos_none_found)
-                } else {
-                    getString(R.string.duplicate_photos_found, state.groups.size)
+                binding.tvStatus.text = when {
+                    state.imageCount == 0 -> getString(R.string.duplicate_photos_no_images)
+                    state.fingerprintCount < 2 -> getString(
+                        R.string.duplicate_photos_unreadable,
+                        state.fingerprintCount,
+                        state.imageCount
+                    )
+                    state.groups.isEmpty() -> getString(
+                        R.string.duplicate_photos_scan_summary_none,
+                        state.imageCount,
+                        state.fingerprintCount
+                    )
+                    else -> getString(
+                        R.string.duplicate_photos_scan_summary,
+                        state.imageCount,
+                        state.fingerprintCount,
+                        state.groups.size
+                    )
                 }
+                binding.btnRescan.isVisible = true
             }
             is DuplicatePhotoUiState.Error -> {
                 binding.progressBar.isVisible = false
                 binding.tvStatus.isVisible = true
                 binding.rvDuplicateGroups.isVisible = false
                 binding.tvEmpty.isVisible = false
+                binding.btnRescan.isVisible = true
                 binding.tvStatus.text = state.message
             }
         }
@@ -134,6 +196,8 @@ class DuplicatePhotoFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        setEnterSharedElementCallback(null)
+        setExitSharedElementCallback(null)
         super.onDestroyView()
         _binding = null
     }

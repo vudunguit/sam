@@ -18,10 +18,24 @@
         android:id="@+id/ivVideoIcon"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_margin="8dp"
         android:src="@android:drawable/ic_media_play"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/ivMedia"
-        app:layout_constraintStart_toStartOf="@id/ivMedia"
-        android:layout_margin="8dp" />
+        app:layout_constraintStart_toStartOf="@id/ivMedia" />
+
+    <TextView
+        android:id="@+id/tvDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:background="#99000000"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="2dp"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/ivMedia"
+        app:layout_constraintEnd_toEndOf="@id/ivMedia" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
